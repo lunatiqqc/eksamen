@@ -9,6 +9,7 @@ export default function Dashboard({
     swagger,
     imageBaseUrl,
     endpointToImageEndpointMapper,
+    endpointToSwaggerComponentMapper,
 }) {
     const [endpointsData, setEndpointsData] = useState();
     const [editingAt, setEditingAt] = useState();
@@ -43,8 +44,6 @@ export default function Dashboard({
             const refsEl = Object.values(editableRefs.current).filter((el) => {
                 return el !== null && el !== undefined;
             });
-
-            console.log(refsEl);
 
             for (let i = 0; i < refsEl.length; i++) {
                 const element = refsEl[i];
@@ -111,8 +110,6 @@ export default function Dashboard({
         if (obj instanceof Error) {
             return;
         }
-
-        console.log(obj);
 
         let image;
 
@@ -464,12 +461,10 @@ export default function Dashboard({
             </header>
             <main className='w-full '>
                 {endpointsFiltered.map((endpoint, i) => {
-                    const schema = endpoint.split("/");
+                    const schema = endpointToSwaggerComponentMapper[endpoint];
 
                     const properties =
-                        swagger.components.schemas[
-                            schema[schema.length - 1].slice(0, -1)
-                        ].properties;
+                        swagger.components.schemas[schema].properties;
 
                     const keys = Object.keys(properties);
 
@@ -477,6 +472,7 @@ export default function Dashboard({
                     const addingAtEndpoint = addingAt === endpoint;
                     return (
                         <article
+                            key={i}
                             ref={(el) => {
                                 tableRefs.current = {
                                     ...tableRefs.current,
@@ -501,8 +497,11 @@ export default function Dashboard({
                             <table className='text-xs'>
                                 <thead>
                                     <tr>
-                                        {keys.map((key) => (
-                                            <th className='text-left p-4 pl-0 border-2 bg-slate-100'>
+                                        {keys.map((key, i) => (
+                                            <th
+                                                key={i}
+                                                className='text-left p-4 pl-0 border-2 bg-slate-100'
+                                            >
                                                 {key}
                                             </th>
                                         ))}
@@ -529,9 +528,12 @@ export default function Dashboard({
                                                     1;
 
                                             return (
-                                                <tr className=' even:bg-slate-100'>
+                                                <tr
+                                                    key={i}
+                                                    className='even:bg-slate-100'
+                                                >
                                                     {dataObjAsArray.map(
-                                                        ([key, value]) => {
+                                                        ([key, value], i) => {
                                                             const contentEditable =
                                                                 key !== "id" &&
                                                                 (editing ||
@@ -545,6 +547,7 @@ export default function Dashboard({
                                                             //
                                                             return (
                                                                 <td
+                                                                    key={i}
                                                                     className='p-4 pl-0 max-w-[40ch] break-normal overflow-hidden text-ellipsis'
                                                                     ref={(
                                                                         el
@@ -588,15 +591,9 @@ export default function Dashboard({
                                                                                         ? ImagePreviewSrc
                                                                                             ? ImagePreviewSrc
                                                                                             : imageBaseUrl +
-                                                                                              endpointToImageEndpointMapper[
-                                                                                                  endpoint
-                                                                                              ] +
                                                                                               "/" +
                                                                                               value
                                                                                         : imageBaseUrl +
-                                                                                          endpointToImageEndpointMapper[
-                                                                                              endpoint
-                                                                                          ] +
                                                                                           "/" +
                                                                                           value
                                                                                 }

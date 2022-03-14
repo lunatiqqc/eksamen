@@ -11,17 +11,22 @@ export default function News() {
     }, []);
 
     return (
-        <article>
-            <h1>News</h1>
-            <ul className='grid gap-4'>
+        <article className='my-8'>
+            <h1 className='text-xl font-bold my-8'>News</h1>
+            <ul className='grid gap-12'>
                 {news?.map((news) => {
                     return (
-                        <li>
-                            <h1>{news.title}</h1>
-                            <time dateTime={news.date}>{news.date}</time>
+                        <li className='grid gap-2'>
+                            <h1 className='text-lg font-bold'>{news.title}</h1>
+                            <time
+                                className='text-orange-500'
+                                dateTime={news.date}
+                            >
+                                {news.date}
+                            </time>
                             <p className='line-clamp-2'>{news.content}</p>
                             <Link
-                                className='underline'
+                                className='underline text-orange-500'
                                 to={"/newsdetails/"}
                                 state={{ news: news }}
                             >

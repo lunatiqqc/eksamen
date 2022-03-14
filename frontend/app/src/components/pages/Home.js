@@ -20,31 +20,17 @@ export default function Home() {
     }, []);
 
     return (
-        <article>
+        <article className='my-12'>
             <header>
-                <nav>
-                    <ul className='flex'>
-                        {[
-                            { text: "Show All" },
-                            { text: "Latest Trailers" },
-                            { text: "Most Commented" },
-                        ].map((item) => {
-                            return <li>{item.text}</li>;
-                        })}
-                    </ul>
-                    <form action=''>
-                        <input type='search' />
-                        <button>Search</button>
-                    </form>
-                </nav>
-                <aside>
-                    <form action=''>
-                        <input type='text' placeholder='Email...' />
-                        <input type='text' placeholder='Password...' />
-                        <button>Login</button>
-                        <button>Not a member?</button>
-                    </form>
-                </aside>
+                <ul className='flex gap-4'>
+                    {[
+                        { text: "Show All" },
+                        { text: "Latest Trailers" },
+                        { text: "Most Commented" },
+                    ].map((item) => {
+                        return <li>{item.text}</li>;
+                    })}
+                </ul>
             </header>
             <main>
                 <ul className='grid grid-cols-8 gap-4'>
