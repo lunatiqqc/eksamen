@@ -9,7 +9,6 @@ import News from "./components/pages/News";
 import NewsDetails from "./components/pages/NewsDetails";
 import Dashboard from "./components/pages/Dashboard";
 import swagger from "./lib/swagger.json";
-import "./index.css";
 import { imagesBaseUrl } from "./lib/fetcher";
 import SearchResults from "./components/pages/SearchResults";
 

@@ -19,8 +19,8 @@ export default function Movie() {
     }
 
     return (
-        <article className='grid gap-4'>
-            <h1 className='font-bold text-xl'>{movie.title}</h1>
+        <article className='grid gap-8 my-16'>
+            <h1 className='font-bold text-2xl'>{movie.title}</h1>
             <table>
                 <tbody>
                     <tr>

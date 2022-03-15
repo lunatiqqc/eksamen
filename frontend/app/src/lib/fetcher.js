@@ -8,6 +8,8 @@ async function post(endpoint, body) {
         body: body,
     });
 
+    return res.ok;
+
     const json = await res.json();
 
     console.log(json);

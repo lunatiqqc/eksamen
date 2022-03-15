@@ -1,107 +1,142 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import { get, imagesBaseUrl } from "../../lib/fetcher";
+import filterMovies from "../../lib/filterMovies";
+import MovieList from "../MovieList";
+
+import { useSearchParams } from "react-router-dom";
 
 export default function Home() {
+    const { searchValue, setSearchValue } = useOutletContext();
+    console.log(searchValue);
     const [movies, setMovies] = useState();
-    const [messages, setMessages] = useState();
+    const [comments, setComments] = useState();
     const [movieHovered, setMovieHovered] = useState();
+
+    const [searchParams] = useSearchParams();
+
+    const searchParamsString = searchParams.toString().slice(0, -1);
 
     useEffect(() => {
         get("Movies").then((json) => {
             setMovies(json);
         });
-        get("Messages").then((json) => {
-            console.log(json);
-            setMessages(json);
-        });
+        //get("Comments").then((json) => {
+        //    console.log(json);
+        //    setComments(json);
+        //});
 
         return () => {};
     }, []);
 
+    useEffect(() => {
+        if (movies) {
+            if (searchValue) {
+                setMovies((prev) => {
+                    return prev.filter((movie) => {
+                        return filterMovies(movie, searchValue);
+                    });
+                });
+            }
+
+            if (searchParamsString === "latestmovies") {
+                setMovies((prev) => {
+                    const copy = [...prev];
+
+                    return copy.sort((a, b) => {
+                        a = +new Date(a.releaseDate);
+                        b = +new Date(b.releaseDate);
+
+                        return b - a;
+                    });
+                });
+            }
+            if (searchParamsString === "allmovies") {
+                console.log(true);
+                setMovies((prev) => {
+                    const copy = [...prev];
+                    return copy.sort((a, b) => {
+                        a = a.id;
+                        b = b.id;
+
+                        console.log(a, b);
+                        return a - b;
+                    });
+                });
+            }
+        }
+    }, [searchParamsString]);
+
+    const queryToHeadingMapper = {
+        allmovies: "All movies",
+        latestmovies: "Latest movies",
+        mostcommented: "Most commented movies",
+    };
+
     return (
-        <article className='my-12'>
-            <header>
-                <ul className='flex gap-4'>
-                    {[
-                        { text: "Show All" },
-                        { text: "Latest Trailers" },
-                        { text: "Most Commented" },
-                    ].map((item) => {
-                        return <li>{item.text}</li>;
-                    })}
-                </ul>
-            </header>
-            <main>
-                <ul className='flex flex-wrap gap-4'>
-                    {movies?.map((movie, i) => {
-                        if (i < 8) {
-                            const hovering = movieHovered === movie.id;
-                            return (
-                                <li
-                                    className='w-[160px]'
-                                    key={i}
-                                    onMouseOver={() => {
-                                        setMovieHovered(movie.id);
-                                    }}
-                                    onMouseOut={() => {
-                                        setMovieHovered();
+        <>
+            {movies ? (
+                <article className='my-12'>
+                    <h1>
+                        {queryToHeadingMapper[searchParamsString]}
+                        <br />
+                        {searchValue ? (
+                            <span className='my-4 flex gap-4'>
+                                {"Based on search: " + searchValue}
+                                <button
+                                    onClick={() => {
+                                        setSearchValue("");
                                     }}
                                 >
-                                    <article className='relative'>
-                                        <div
-                                            className={
-                                                "absolute bg-neutral-700 h-full w-full" +
-                                                (hovering
-                                                    ? " flex flex-col items-center justify-around animate-fadein "
-                                                    : " hidden")
-                                            }
-                                        >
-                                            <h1 className='text-center'>
-                                                {movie.title}
-                                            </h1>
-                                            <Link
-                                                to={"movie/" + movie.id}
-                                                className='underline '
-                                            >
-                                                More
-                                            </Link>
-                                        </div>
-                                        <figure>
-                                            <img
-                                                src={
-                                                    imagesBaseUrl + movie.image
-                                                }
-                                                alt={movie.title}
-                                            />
-                                        </figure>
-                                    </article>
-                                </li>
-                            );
-                        } else {
-                            return null;
+                                    Clear search
+                                </button>
+                            </span>
+                        ) : null}
+                    </h1>
+
+                    <MovieList
+                        //When we return a negative value, a takes precedence in sorting
+
+                        movies={movies.filter((movie) => {
+                            return filterMovies(movie, searchValue);
+                        })}
+                        amountToShow={
+                            searchParamsString === "allmovies" ? null : 8
                         }
-                    })}
-                </ul>
-                <ul className='grid grid-cols-8 gap-4'>
-                    {movies?.map((movie, i) => {
-                        if (i < 8) {
-                            return (
-                                <li key={i}>
-                                    <figure>
-                                        <img
-                                            src={imagesBaseUrl + movie.image}
-                                            alt={movie.title}
-                                        />
-                                    </figure>
-                                </li>
-                            );
-                        } else {
-                            return null;
-                        }
-                    })}
-                </ul>
-            </main>
-        </article>
+                        movieHovered={movieHovered}
+                        setMovieHovered={setMovieHovered}
+                    />
+                </article>
+            ) : null}
+            {movies && comments ? (
+                <article className='my-12'>
+                    <h1>Most Commented</h1>
+
+                    <MovieList
+                        //When we return a negative value, a takes precedence in sorting
+                        movies={movies
+                            .filter((movie) => {
+                                console.log(searchValue);
+                                return searchValue
+                                    ? filterMovies(movie, searchValue)
+                                    : true;
+                            })
+                            .sort((a, b) => {
+                                a = comments.filter((comment) => {
+                                    return comment.movieId === a.id;
+                                }).length;
+
+                                b = comments.filter((comment) => {
+                                    return comment.movieId === b.id;
+                                }).length;
+
+                                return b - a;
+                            })}
+                        movieHovered={movieHovered}
+                        setMovieHovered={setMovieHovered}
+                    />
+                </article>
+            ) : null}
+        </>
     );
 }
