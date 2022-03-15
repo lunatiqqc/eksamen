@@ -11,6 +11,7 @@ import Dashboard from "./components/pages/Dashboard";
 import swagger from "./lib/swagger.json";
 import "./index.css";
 import { imagesBaseUrl } from "./lib/fetcher";
+import SearchResults from "./components/pages/SearchResults";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -22,6 +23,7 @@ ReactDOM.render(
                     <Route path='news' element={<News />}></Route>
                     <Route path='newsdetails' element={<NewsDetails />}></Route>
                     <Route path='contact' element={<Contact />}></Route>
+                    <Route path='search' element={<SearchResults />}></Route>
                 </Route>
                 <Route
                     path='/dashboard'

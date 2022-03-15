@@ -33,12 +33,13 @@ export default function Home() {
                 </ul>
             </header>
             <main>
-                <ul className='grid grid-cols-8 gap-4'>
+                <ul className='flex flex-wrap gap-4'>
                     {movies?.map((movie, i) => {
                         if (i < 8) {
                             const hovering = movieHovered === movie.id;
                             return (
                                 <li
+                                    className='w-[160px]'
                                     key={i}
                                     onMouseOver={() => {
                                         setMovieHovered(movie.id);

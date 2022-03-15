@@ -8,6 +8,7 @@
 
 .App tr {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .App td {

@@ -1,11 +1,21 @@
 import { useEffect, useState } from "react";
-import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
+import {
+    BrowserRouter,
+    Link,
+    Outlet,
+    Route,
+    Routes,
+    useNavigate,
+} from "react-router-dom";
 import Home from "./components/pages/Home";
 import { get } from "./lib/fetcher";
 
 function App() {
     const [news, setNews] = useState();
     const [movies, setMovies] = useState();
+    const [searchValue, setSearchValue] = useState("");
+
+    const navigate = useNavigate();
     useEffect(() => {
         get("News").then((json) => setNews(json));
         get("Movies").then((json) => setMovies(json));
@@ -18,6 +28,16 @@ function App() {
         { text: "News", link: "/news" },
         { text: "Contant", link: "/contact" },
     ];
+
+    function handleSearchChange(e) {
+        setSearchValue(e.target.value);
+    }
+
+    function handleSearchSubmit(e) {
+        e.preventDefault();
+
+        navigate("/search", { state: searchValue });
+    }
 
     return (
         <div className='App px-16 bg-neutral-900 text-slate-50'>
@@ -38,8 +58,16 @@ function App() {
                     </ul>
                 </nav>
 
-                <form className='ml-auto w-fit' action=''>
-                    <input type='search' />
+                <form
+                    onSubmit={handleSearchSubmit}
+                    className='ml-auto w-fit'
+                    action=''
+                >
+                    <input
+                        type='search'
+                        value={searchValue}
+                        onChange={handleSearchChange}
+                    />
                     <button>Search</button>
                 </form>
 
@@ -53,7 +81,7 @@ function App() {
                 </aside>
             </header>
             <main>
-                <Outlet></Outlet>
+                <Outlet context={{ searchValue: searchValue }}></Outlet>
             </main>
             <footer>
                 <section className='grid grid-cols-2 gap-4'>
