@@ -16,7 +16,7 @@ export default function NewsDetails() {
                 {news.date}
             </time>
 
-            <p>{news.content}</p>
+            <p className='max-w-prose'>{news.content}</p>
 
             <Link
                 className='px-12 py-2 bg-slate-50 text-black w-fit'

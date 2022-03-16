@@ -46,6 +46,9 @@ export default function SearchResults() {
                                         />
                                     </figure>
                                     <div className='max-w-[50%]'>
+                                        <h1 className='text-xl font-bold pb-2'>
+                                            {movie.title}
+                                        </h1>
                                         <p className='line-clamp-5'>
                                             {movie.description}
                                         </p>

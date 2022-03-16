@@ -5,6 +5,7 @@ import {
     Outlet,
     Route,
     Routes,
+    useLocation,
     useNavigate,
     useSearchParams,
 } from "react-router-dom";
@@ -73,6 +74,14 @@ function App() {
         };
     }, []);
 
+    const location = useLocation();
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, left: 0 });
+
+        setShowMobileMenu(false);
+    }, [location]);
+
     const links = [
         { text: "Home", link: "/" },
         { text: "News", link: "/news" },
@@ -102,8 +111,8 @@ function App() {
 
     return (
         <div className='md:px-2 px-16 bg-neutral-900 text-slate-50'>
-            <header className='grid gap-4 md:sticky -top-12 bg-neutral-900 z-30'>
-                <nav className='grid gap-4 md:relative'>
+            <header className='grid gap-4 md:sticky -top-8 bg-neutral-900 z-30'>
+                <nav className='grid md:gap-0 gap-4 md:relative'>
                     <ul className='flex justify-end gap-2'>
                         {[
                             { icon: <AiFillFacebook size={30} />, link: "/" },
@@ -121,13 +130,15 @@ function App() {
                             );
                         })}
                     </ul>
-                    <section className='flex flex-wrap justify-between my-8 relative'>
+                    <section className='flex flex-wrap justify-between md:my-2 my-8 relative'>
                         <Link to='/' className='text-2xl font-bold'>
                             <h1>MOVIE HUNTER</h1>
                         </Link>
                         <button
                             onClick={() => {
                                 setShowMobileMenu((prev) => {
+                                    setShowLogin(false);
+                                    setShowSearch(false);
                                     return !prev;
                                 });
                             }}
@@ -313,10 +324,10 @@ function App() {
                 ></Outlet>
             </main>
             <footer>
-                <section className='grid md:grid-cols-1 grid-cols-2 gap-4'>
+                <section className='grid md:grid-cols-1 grid-cols-2 md:gap-16 gap-4'>
                     <article>
                         <div className='flex justify-between'>
-                            <h1>News</h1>
+                            <h1 className='text-xl font-bold'>News</h1>
                             <Link className='text-orange-500' to='/news'>
                                 See All
                             </Link>
@@ -343,6 +354,7 @@ function App() {
                                             </p>
                                             <Link
                                                 to='/newsdetails'
+                                                state={{ news: news }}
                                                 className='underline text-orange-500'
                                             >
                                                 Read More
@@ -355,7 +367,7 @@ function App() {
                     </article>
                     <article>
                         <div className='flex justify-between'>
-                            <h1>Coming Soon</h1>
+                            <h1 className='text-xl font-bold'>Coming Soon</h1>
                             <Link className='text-orange-500' to='/'>
                                 See All
                             </Link>

@@ -36,7 +36,7 @@ export default function Movie() {
                 </tbody>
             </table>
 
-            <section className='grid grid-cols-[1fr,3.5fr] gap-4'>
+            <section className='grid md:grid-rows-[300px,400px] md:grid-cols-1 grid-cols-[1fr,3fr] gap-4'>
                 <figure>
                     <img src={imagesBaseUrl + movie.image} alt={movie.title} />
                 </figure>
@@ -64,7 +64,7 @@ export default function Movie() {
             </table>
             <section>
                 <h2>Description</h2>
-                <p>{movie.description}</p>
+                <p className='max-w-prose'>{movie.description}</p>
             </section>
 
             <section>

@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 td {
     color: rgb(255, 166, 0);
 }

@@ -12,5 +12,7 @@ export default function filterMovies(movie, filterValue) {
         movie.genres,
     ];
     const searchAbleConcat = searchAble.join("");
-    return searchAbleConcat.includes(filterValue);
+
+    console.log(searchAbleConcat);
+    return searchAbleConcat.toLowerCase().includes(filterValue.toLowerCase());
 }

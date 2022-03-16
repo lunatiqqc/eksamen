@@ -79,7 +79,7 @@ export default function Contact() {
                         value={form.message || ""}
                     ></textarea>
 
-                    <button className='w-fit'>Send</button>
+                    <button className='w-fit px-4 py-2'>Send</button>
                     {formResponseMessage ? (
                         <div>{formResponseMessage}</div>
                     ) : null}
