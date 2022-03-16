@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "BRXzGwEZTbgnnaM34hAuMdfkdxD1cIJ7EoKw+2Fc+To=",
+  "Hash": "dbNjqlBn/gp2lMQj1RE++NqgNnvynWZjOcRdSWvhXJc=",
   "Source": "CoreMovieHunterAPI",
   "BasePath": "_content/CoreMovieHunterAPI",
   "Mode": "Default",
@@ -16,6 +16,40 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\Lunatiqqc\\Desktop\\skolearbejde\\eksamen\\backend\\CoreMovieHunterAPI\\CoreMovieHunterAPI\\wwwroot\\0d45cb42-5ec8-4ae1-8657-ef8f2d232088.jpg",
+      "SourceId": "CoreMovieHunterAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Lunatiqqc\\Desktop\\skolearbejde\\eksamen\\backend\\CoreMovieHunterAPI\\CoreMovieHunterAPI\\wwwroot\\",
+      "BasePath": "_content/CoreMovieHunterAPI",
+      "RelativePath": "0d45cb42-5ec8-4ae1-8657-ef8f2d232088.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\0d45cb42-5ec8-4ae1-8657-ef8f2d232088.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Lunatiqqc\\Desktop\\skolearbejde\\eksamen\\backend\\CoreMovieHunterAPI\\CoreMovieHunterAPI\\wwwroot\\540c1690-6500-417d-a548-77e44b7b1f25.jpg",
+      "SourceId": "CoreMovieHunterAPI",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Lunatiqqc\\Desktop\\skolearbejde\\eksamen\\backend\\CoreMovieHunterAPI\\CoreMovieHunterAPI\\wwwroot\\",
+      "BasePath": "_content/CoreMovieHunterAPI",
+      "RelativePath": "540c1690-6500-417d-a548-77e44b7b1f25.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\540c1690-6500-417d-a548-77e44b7b1f25.jpg"
+    },
     {
       "Identity": "C:\\Users\\Lunatiqqc\\Desktop\\skolearbejde\\eksamen\\backend\\CoreMovieHunterAPI\\CoreMovieHunterAPI\\wwwroot\\aquietplace.jpg",
       "SourceId": "CoreMovieHunterAPI",

@@ -11,36 +11,45 @@ import Dashboard from "./components/pages/Dashboard";
 import swagger from "./lib/swagger.json";
 import { imagesBaseUrl } from "./lib/fetcher";
 import SearchResults from "./components/pages/SearchResults";
+import { MyProvider } from "./components/Context";
 
 ReactDOM.render(
     <React.StrictMode>
-        <BrowserRouter>
-            <Routes>
-                <Route path='/' element={<App />}>
-                    <Route index element={<Home />}></Route>
-                    <Route path='movie/:id' element={<Movie />}></Route>
-                    <Route path='news' element={<News />}></Route>
-                    <Route path='newsdetails' element={<NewsDetails />}></Route>
-                    <Route path='contact' element={<Contact />}></Route>
-                    <Route path='search' element={<SearchResults />}></Route>
-                </Route>
-                <Route
-                    path='/dashboard'
-                    element={
-                        <Dashboard
-                            swagger={swagger}
-                            endpointToSwaggerComponentMapper={{
-                                Contacts: "Contact",
-                                Messages: "Message",
-                                Movies: "Movie",
-                                News: "News",
-                            }}
-                            imageBaseUrl={imagesBaseUrl}
-                        />
-                    }
-                ></Route>
-            </Routes>
-        </BrowserRouter>
+        <MyProvider>
+            <BrowserRouter>
+                <Routes>
+                    <Route path='/' element={<App />}>
+                        <Route index element={<Home />}></Route>
+                        <Route path='movie/:id' element={<Movie />}></Route>
+                        <Route path='news' element={<News />}></Route>
+                        <Route
+                            path='news/:id'
+                            element={<NewsDetails />}
+                        ></Route>
+                        <Route path='contact' element={<Contact />}></Route>
+                        <Route
+                            path='search'
+                            element={<SearchResults />}
+                        ></Route>
+                    </Route>
+                    <Route
+                        path='/dashboard'
+                        element={
+                            <Dashboard
+                                swagger={swagger}
+                                endpointToSwaggerComponentMapper={{
+                                    Contacts: "Contact",
+                                    Messages: "Message",
+                                    Movies: "Movie",
+                                    News: "News",
+                                }}
+                                imageBaseUrl={imagesBaseUrl}
+                            />
+                        }
+                    ></Route>
+                </Routes>
+            </BrowserRouter>
+        </MyProvider>
     </React.StrictMode>,
     document.getElementById("root")
 );

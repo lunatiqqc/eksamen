@@ -57,7 +57,7 @@ namespace CoreMovieHunterAPI.Controllers
             if (Tools.IsBase64String(movie.Image))
             {
                 Tools.DeleteFile(_env.WebRootPath, _context.Movies.AsNoTracking().FirstOrDefault(e => e.Id == id).Image);
-                movie.Image = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host.Value + "/" + Tools.ConvertBase64ToFile(movie.Image, _env.WebRootPath);
+                movie.Image = Tools.ConvertBase64ToFile(movie.Image, _env.WebRootPath);
             }
 
             _context.Entry(movie).State = EntityState.Modified;
@@ -88,7 +88,7 @@ namespace CoreMovieHunterAPI.Controllers
         {
             if (Tools.IsBase64String(movie.Image))
             {
-                movie.Image = HttpContext.Request.Scheme + "://" + HttpContext.Request.Host.Value + "/" + Tools.ConvertBase64ToFile(movie.Image, _env.WebRootPath);
+                movie.Image = Tools.ConvertBase64ToFile(movie.Image, _env.WebRootPath);
             }
 
             _context.Movies.Add(movie);

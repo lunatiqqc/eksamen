@@ -2,32 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-img {
+.App img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-td {
+.App td {
     color: rgb(255, 166, 0);
 }
 
-tr {
+.App tr {
     display: flex;
     flex-wrap: wrap;
 }
 
-td {
+.App td {
     margin-right: 16px;
 }
 
-input,
-textarea {
+.App input,
+.App textarea {
     padding: 2px;
     color: black;
 }
 
-button {
+.App button {
     background-color: white;
     color: black;
     height: 100%;

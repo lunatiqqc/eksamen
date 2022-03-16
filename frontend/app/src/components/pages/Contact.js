@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { get, post } from "../../lib/fetcher";
 
 export default function Contact() {
@@ -6,8 +6,15 @@ export default function Contact() {
     const [form, setForm] = useState({});
 
     const [formResponseMessage, setFormResponseMessage] = useState();
+
+    const firstFocusElement = useRef();
     useEffect(() => {
         get("Contacts").then((json) => setContacts(json));
+
+        document.title = "Contact";
+
+        console.log(firstFocusElement);
+        firstFocusElement.current.focus();
         return () => {};
     }, []);
 
@@ -36,12 +43,23 @@ export default function Contact() {
 
     return (
         <article className='my-12'>
-            <h1 className='text-xl font-bold'>Contact</h1>
+            <h1
+                ref={(el) => {
+                    firstFocusElement.current = el;
+                }}
+                tabIndex='0'
+                className='text-xl font-bold'
+            >
+                Contact
+            </h1>
 
-            <p>{contacts?.[0].content}</p>
+            <p tabIndex='0'>{contacts?.[0].content}</p>
 
             <article className='max-w-prose mx-auto my-8'>
-                <h1 className='text-orange-500 text-2xl text-center my-4'>
+                <h1
+                    tabIndex='0'
+                    className='text-orange-500 text-2xl text-center my-4'
+                >
                     Get in touch!
                 </h1>
                 <form

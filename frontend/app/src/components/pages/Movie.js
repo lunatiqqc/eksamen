@@ -1,26 +1,45 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { get, imagesBaseUrl } from "../../lib/fetcher";
+import { context } from "../Context";
 
 export default function Movie() {
+    const { movies } = useContext(context);
     const { id } = useParams();
 
     const [movie, setMovie] = useState();
 
+    const firstFocusElement = useRef();
+
     console.log(id);
 
     useEffect(() => {
-        get("Movies", id).then((json) => setMovie(json));
-        return () => {};
-    }, []);
+        if (movies) {
+            const movieDetails = movies.find((movie) => {
+                return movie.id === parseInt(id);
+            });
 
-    if (movie === undefined) {
+            console.log(movieDetails);
+            setMovie(movieDetails);
+
+            firstFocusElement.current?.focus();
+            return () => {};
+        }
+    }, [movies]);
+
+    if (movie === undefined || movies === undefined) {
         return null;
     }
 
     return (
         <article className='grid gap-8 my-16'>
-            <h1 className='font-bold text-2xl'>{movie.title}</h1>
+            <h1
+                tabIndex='0'
+                ref={firstFocusElement}
+                className='font-bold text-2xl'
+            >
+                {movie.title}
+            </h1>
             <table>
                 <tbody>
                     <tr>

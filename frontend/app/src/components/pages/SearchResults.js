@@ -27,14 +27,14 @@ export default function SearchResults() {
     return searchValue && movies ? (
         <article className='my-12'>
             <h1 className='text-xl font-bold my-8'>Search results</h1>
-            <ul className='flex flex-wrap gap-8 '>
-                <EmptyArrayChecker message='Ingen resultater'>
+            <ul className='flex flex-wrap gap-8'>
+                <EmptyArrayChecker message='No results'>
                     {movies
                         .filter((movie) => filterMovies(movie, searchValue))
                         .map((movie) => {
                             return (
-                                <li className='flex flex-wrap gap-4 animate-fadeinslow'>
-                                    <figure className='flex-shrink-0 '>
+                                <li className='flex flex-wrap gap-4 animate-fadeinslow max-w-prose'>
+                                    <figure className=''>
                                         <img
                                             src={
                                                 imagesBaseUrl +
@@ -45,11 +45,11 @@ export default function SearchResults() {
                                             className='w-48'
                                         />
                                     </figure>
-                                    <div className='max-w-[50%]'>
+                                    <div className=''>
                                         <h1 className='text-xl font-bold pb-2'>
                                             {movie.title}
                                         </h1>
-                                        <p className='line-clamp-5'>
+                                        <p className='line-clamp-5 max-w-prose'>
                                             {movie.description}
                                         </p>
                                         <table>
@@ -80,6 +80,6 @@ export default function SearchResults() {
             </ul>
         </article>
     ) : (
-        <div className='p-4 text-xl'>Tomt søgefelt</div>
+        <div className='p-4 text-xl'>Empty searchfield</div>
     );
 }

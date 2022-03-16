@@ -6,6 +6,8 @@ export default function EmptyArrayChecker({ children, message }) {
     return children.length > 0 ? (
         <>{children}</>
     ) : (
-        <span className='text-xl p-4'>{message}</span>
+        <span tabIndex='0' className='text-xl m-4 ml-0'>
+            {message}
+        </span>
     );
 }

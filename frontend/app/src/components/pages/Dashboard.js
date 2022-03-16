@@ -111,17 +111,19 @@ export default function Dashboard({
             return;
         }
 
-        let image;
+        if (editableRefs.current["image"]) {
+            let image;
 
-        if (ImagePreviewSrc) {
-            image = await imageToBase64(ImagePreviewSrc);
-        } else {
-            const imageSrc = editableRefs.current["image"].src;
+            if (ImagePreviewSrc) {
+                image = await imageToBase64(ImagePreviewSrc);
+            } else {
+                const imageSrc = editableRefs.current["image"].src;
 
-            image = await imageToBase64(imageSrc);
+                image = await imageToBase64(imageSrc);
+            }
+
+            obj.image = image.split(",")[1];
         }
-
-        obj.image = image.split(",")[1];
 
         const success = await put(endpoint, obj.id, JSON.stringify(obj));
 
@@ -231,12 +233,14 @@ export default function Dashboard({
             return;
         }
 
+        console.log(obj);
+
         if (ImagePreviewSrc) {
             const image = await imageToBase64(ImagePreviewSrc);
 
             obj.image = image.split(",")[1];
         } else {
-            obj.image = null;
+            obj.image = "";
         }
 
         const newData = await post(endpoint, JSON.stringify(obj));
@@ -541,6 +545,34 @@ export default function Dashboard({
                                                                         addingAtEndpoint ===
                                                                             true));
 
+                                                            function determineImageSrc(
+                                                                value
+                                                            ) {
+                                                                console.log(
+                                                                    value
+                                                                );
+                                                                if (
+                                                                    value?.includes(
+                                                                        "blob:"
+                                                                    )
+                                                                ) {
+                                                                    return value;
+                                                                }
+
+                                                                if (
+                                                                    editing ||
+                                                                    (addingAtEndpoint &&
+                                                                        isLastItem)
+                                                                ) {
+                                                                    return ImagePreviewSrc;
+                                                                }
+                                                                return (
+                                                                    imageBaseUrl +
+                                                                    "/" +
+                                                                    value
+                                                                );
+                                                            }
+
                                                             //const dataType =
                                                             //    properties[key]
                                                             //        .type;
@@ -580,23 +612,9 @@ export default function Dashboard({
                                                                     "image" ? (
                                                                         <figure className='w-48 h-48 relative flex items-center justify-center'>
                                                                             <img
-                                                                                src={
-                                                                                    value?.includes(
-                                                                                        "blob:"
-                                                                                    )
-                                                                                        ? value
-                                                                                        : editing ||
-                                                                                          (addingAtEndpoint &&
-                                                                                              isLastItem)
-                                                                                        ? ImagePreviewSrc
-                                                                                            ? ImagePreviewSrc
-                                                                                            : imageBaseUrl +
-                                                                                              "/" +
-                                                                                              value
-                                                                                        : imageBaseUrl +
-                                                                                          "/" +
-                                                                                          value
-                                                                                }
+                                                                                src={determineImageSrc(
+                                                                                    value
+                                                                                )}
                                                                                 alt=''
                                                                                 className={
                                                                                     "object-contain my-auto w-full h-full"

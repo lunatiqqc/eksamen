@@ -1,32 +1,26 @@
-import { useEffect, useState } from "react";
-import {
-    BrowserRouter,
-    Link,
-    Outlet,
-    Route,
-    Routes,
-    useLocation,
-    useNavigate,
-    useSearchParams,
-} from "react-router-dom";
-import Home from "./components/pages/Home";
-import { get } from "./lib/fetcher";
-
+import { useContext, useEffect, useRef, useState } from "react";
 import {
     AiFillFacebook,
-    AiFillTwitterSquare,
     AiFillInstagram,
+    AiFillTwitterSquare,
     AiFillYoutube,
-    AiOutlineUser,
     AiOutlineSearch,
+    AiOutlineUser,
 } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
-
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { context } from "./components/Context";
+import ListArticle from "./components/ListArticle";
 import "./index.css";
 
 function App() {
-    const [news, setNews] = useState();
-    const [movies, setMovies] = useState();
+    const { movies, news } = useContext(context);
+
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const [filter, setFilter] = useState();
+
     const [searchValue, setSearchValue] = useState("");
 
     const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -36,9 +30,7 @@ function App() {
     const [showLoginButton, setShowLoginButton] = useState(true);
     const [showSearchButton, setShowSearchButton] = useState(true);
 
-    const [searchParams] = useSearchParams();
-
-    const searchParamsString = searchParams.toString().slice(0, -1);
+    const mounted = useRef();
 
     function handleWindowResize() {
         if (window.innerWidth > 767) {
@@ -60,11 +52,7 @@ function App() {
         this.prevScroll = window.scrollY;
     }
 
-    const navigate = useNavigate();
     useEffect(() => {
-        get("News").then((json) => setNews(json));
-        get("Movies").then((json) => setMovies(json));
-
         window.addEventListener("resize", handleWindowResize);
         window.addEventListener("scroll", handleWindowScroll);
 
@@ -74,13 +62,19 @@ function App() {
         };
     }, []);
 
-    const location = useLocation();
-
     useEffect(() => {
         window.scrollTo({ top: 0, left: 0 });
 
         setShowMobileMenu(false);
-    }, [location]);
+    }, [location.pathname]);
+
+    useEffect(() => {
+        if (mounted.current) {
+            setFilter(location.state?.filter);
+        }
+
+        mounted.current = true;
+    }, [location.state]);
 
     const links = [
         { text: "Home", link: "/" },
@@ -98,39 +92,47 @@ function App() {
         navigate("/search", { state: searchValue });
     }
 
-    const filterToQueryMapper = {
-        "Show All": "allmovies",
-        "Latest Movies": "latestmovies",
-        "Most Commented": "mostcommented",
-    };
-    const queryToFilterMapper = {
-        allmovies: "Show All",
-        latestmovies: "Latest Movies",
-        mostcommented: "Most Commented",
-    };
-
     return (
-        <div className='md:px-2 px-16 bg-neutral-900 text-slate-50'>
+        <div className='App md:px-2 px-16 bg-neutral-900 text-slate-50'>
             <header className='grid gap-4 md:sticky -top-8 bg-neutral-900 z-30'>
                 <nav className='grid md:gap-0 gap-4 md:relative'>
                     <ul className='flex justify-end gap-2'>
                         {[
-                            { icon: <AiFillFacebook size={30} />, link: "/" },
+                            {
+                                icon: <AiFillFacebook size={30} />,
+                                link: "https://www.facebook.com/",
+                                title: "Facebook page",
+                            },
                             {
                                 icon: <AiFillTwitterSquare size={30} />,
-                                link: "/",
+                                link: "https://www.twitter.com/",
+                                title: "Twitter page",
                             },
-                            { icon: <AiFillInstagram size={30} />, link: "/" },
-                            { icon: <AiFillYoutube size={30} />, link: "/" },
+                            {
+                                icon: <AiFillInstagram size={30} />,
+                                link: "https://www.instagram.com/",
+                                title: "Instagram page",
+                            },
+                            {
+                                icon: <AiFillYoutube size={30} />,
+                                link: "https://www.youtube.com/",
+                                title: "Youtube channel",
+                            },
                         ].map((item, i) => {
                             return (
                                 <li key={i}>
-                                    <Link to={item.link}>{item.icon}</Link>
+                                    <a
+                                        target='_blank'
+                                        title={item.title}
+                                        href={item.link}
+                                    >
+                                        {item.icon}
+                                    </a>
                                 </li>
                             );
                         })}
                     </ul>
-                    <section className='flex flex-wrap justify-between md:my-2 my-8 relative'>
+                    <section className='flex flex-wrap justify-between md:my-2 mb-4 relative'>
                         <Link to='/' className='text-2xl font-bold'>
                             <h1>MOVIE HUNTER</h1>
                         </Link>
@@ -184,19 +186,15 @@ function App() {
                                 { text: "Most Commented" },
                             ].map((item, i) => {
                                 return (
-                                    <li key={i}>
+                                    <li key={i} className='text-neutral-100 '>
                                         <Link
                                             className={
-                                                queryToFilterMapper[
-                                                    searchParamsString
-                                                ] === item.text
+                                                filter === item.text
                                                     ? "text-orange-500"
                                                     : ""
                                             }
-                                            to={
-                                                "/?" +
-                                                filterToQueryMapper[item.text]
-                                            }
+                                            to={"/"}
+                                            state={{ filter: item.text }}
                                         >
                                             {item.text}
                                         </Link>
@@ -320,90 +318,36 @@ function App() {
                     context={{
                         searchValue: searchValue,
                         setSearchValue: setSearchValue,
+                        filter: filter,
                     }}
                 ></Outlet>
             </main>
             <footer>
                 <section className='grid md:grid-cols-1 grid-cols-2 md:gap-16 gap-4'>
-                    <article>
-                        <div className='flex justify-between'>
-                            <h1 className='text-xl font-bold'>News</h1>
-                            <Link className='text-orange-500' to='/news'>
-                                See All
-                            </Link>
-                        </div>
-                        <ul>
-                            {news?.map((news, i) => {
-                                if (i > 5) {
-                                    return null;
-                                }
+                    {news ? (
+                        <ListArticle
+                            list={news}
+                            title='News'
+                            emptyArrayMessage='No news currently'
+                            itemBaseLink={"/news"}
+                            linkState={{ prevPath: location.pathname }}
+                            itemsBaseLink={"/news"}
+                        />
+                    ) : null}
+                    {movies ? (
+                        <ListArticle
+                            list={movies.filter((movie) => {
                                 return (
-                                    <li key={i} className='my-4'>
-                                        <article>
-                                            <time
-                                                className='text-sm'
-                                                dateTime={news.date}
-                                            >
-                                                {news.date}
-                                            </time>
-                                            <h1 className='text-orange-500 line-clamp-1'>
-                                                {news.title}
-                                            </h1>
-                                            <p className='line-clamp-2'>
-                                                {news.content}
-                                            </p>
-                                            <Link
-                                                to='/newsdetails'
-                                                state={{ news: news }}
-                                                className='underline text-orange-500'
-                                            >
-                                                Read More
-                                            </Link>
-                                        </article>
-                                    </li>
+                                    +new Date(movie.releaseDate) > +new Date()
                                 );
                             })}
-                        </ul>
-                    </article>
-                    <article>
-                        <div className='flex justify-between'>
-                            <h1 className='text-xl font-bold'>Coming Soon</h1>
-                            <Link className='text-orange-500' to='/'>
-                                See All
-                            </Link>
-                        </div>
-                        <ul>
-                            {movies?.map((movie, i) => {
-                                if (i > 3) {
-                                    return null;
-                                }
-                                return (
-                                    <li key={i} className='my-4'>
-                                        <article>
-                                            <time
-                                                className='text-sm'
-                                                dateTime={movie.releaseDate}
-                                            >
-                                                {movie.releaseDate}
-                                            </time>
-                                            <h1 className='text-orange-500 line-clamp-1'>
-                                                {movie.title}
-                                            </h1>
-                                            <p className='line-clamp-2'>
-                                                {movie.description}
-                                            </p>
-                                            <Link
-                                                to={"/movie/" + movie.id}
-                                                className='underline text-orange-500'
-                                            >
-                                                Read More
-                                            </Link>
-                                        </article>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </article>
+                            title='Coming Soon'
+                            emptyArrayMessage='No upcoming movies'
+                            itemBaseLink='/movie'
+                            itemsBaseLink='/'
+                            linkState={{ prevPath: location.pathname }}
+                        />
+                    ) : null}
                 </section>
 
                 <ul className='flex justify-center underline opacity-50 gap-2'>
@@ -416,7 +360,9 @@ function App() {
                     })}
                 </ul>
 
-                <div className='text-center my-4'>&copy;Movie Hunter ApS</div>
+                <section tabIndex='0' className='text-center my-4'>
+                    &copy;Movie Hunter ApS
+                </section>
             </footer>
         </div>
     );

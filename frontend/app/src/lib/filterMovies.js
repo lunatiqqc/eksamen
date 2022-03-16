@@ -1,5 +1,4 @@
 export default function filterMovies(movie, filterValue) {
-    console.log(filterValue === "");
     if (filterValue === "") {
         return true;
     }
@@ -13,6 +12,5 @@ export default function filterMovies(movie, filterValue) {
     ];
     const searchAbleConcat = searchAble.join("");
 
-    console.log(searchAbleConcat);
     return searchAbleConcat.toLowerCase().includes(filterValue.toLowerCase());
 }
