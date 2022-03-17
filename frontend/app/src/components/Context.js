@@ -8,7 +8,7 @@ export function MyProvider({ children }) {
 
     const [news, setNews] = useState();
 
-    const [comments, setComments] = useState([]);
+    const [comments, setComments] = useState();
 
     useEffect(() => {
         get("Movies").then((json) => {

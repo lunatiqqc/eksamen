@@ -41,7 +41,7 @@ export default function NewsDetails() {
                 ref={(el) => {
                     firstFocusElement.current = el;
                 }}
-                className='text-xl font-bold text-orange-500'
+                className='text-2xl font-bold text-orange-500'
             >
                 {newsDetails.title}
             </h1>

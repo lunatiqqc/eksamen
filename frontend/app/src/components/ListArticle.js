@@ -13,7 +13,7 @@ export default function ListArticle({
     return (
         <article>
             <div className='flex justify-between'>
-                <h1 tabIndex='0' className='text-2xl font-bold'>
+                <h1 tabIndex='0' className='text-lg font-bold'>
                     {title}
                 </h1>
                 {list.length > 0 ? (
@@ -35,7 +35,7 @@ export default function ListArticle({
                                         className='text-sm'
                                         dateTime={item.releaseDate || item.date}
                                     >
-                                        {item.releaseDate}
+                                        {item.releaseDate || item.date}
                                     </time>
                                     <h1 className='text-orange-500 line-clamp-1'>
                                         {item.title}

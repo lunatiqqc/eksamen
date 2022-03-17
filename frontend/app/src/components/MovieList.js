@@ -1,9 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { imagesBaseUrl } from "../lib/fetcher";
+import filterMovies from "../lib/filterMovies";
 import { context } from "./Context";
 
-export default function MovieList({ movies, amountToShow, filter }) {
+export default function MovieList({
+    movies,
+    amountToShow,
+    filter,
+    searchValue,
+}) {
     console.log(filter);
     const { comments } = useContext(context);
 
@@ -41,55 +47,59 @@ export default function MovieList({ movies, amountToShow, filter }) {
 
     return (
         <ul className='flex flex-wrap gap-4 md:justify-center'>
-            {filteredMovies.map((movie, i) => {
-                if (amountToShow !== undefined && i >= amountToShow) {
-                    return null;
-                }
-                const hovering = movieHovered === movie.id;
-                return (
-                    <li
-                        className='w-[160px]'
-                        key={i}
-                        onMouseOver={() => {
-                            setMovieHovered(movie.id);
-                        }}
-                        onMouseOut={() => {
-                            setMovieHovered();
-                        }}
-                    >
-                        <article className='relative'>
-                            <figure className='w-[160px] h-[240px]'>
-                                <img
-                                    className='object-cover'
-                                    src={imagesBaseUrl + movie.image}
-                                    alt={movie.title}
-                                />
-                            </figure>
-                            <div
-                                className={
-                                    " flex flex-col items-center justify-around animate-fadein sm:static sm:visible absolute z-10 inset-0 bg-neutral-700 bg-opacity-90 h-full w-full" +
-                                    (hovering ? " " : " sr-only")
-                                }
-                            >
-                                <h1
-                                    aria-label={movie.title}
-                                    aria-hidden='false'
-                                    tabIndex='0'
-                                    className='text-center text-xl p-4'
+            {filteredMovies
+                .filter((movie) => {
+                    return filterMovies(movie, searchValue);
+                })
+                .map((movie, i) => {
+                    if (amountToShow !== undefined && i >= amountToShow) {
+                        return null;
+                    }
+                    const hovering = movieHovered === movie.id;
+                    return (
+                        <li
+                            className='w-[160px]'
+                            key={i}
+                            onMouseOver={() => {
+                                setMovieHovered(movie.id);
+                            }}
+                            onMouseOut={() => {
+                                setMovieHovered();
+                            }}
+                        >
+                            <article className='relative'>
+                                <figure className='w-[160px] h-[240px]'>
+                                    <img
+                                        className='object-cover'
+                                        src={imagesBaseUrl + movie.image}
+                                        alt={movie.title}
+                                    />
+                                </figure>
+                                <div
+                                    className={
+                                        " flex flex-col items-center justify-around animate-fadein sm:static  absolute z-10 inset-0 bg-neutral-700 bg-opacity-90 h-full w-full" +
+                                        (hovering ? " " : " smmin:sr-only")
+                                    }
                                 >
-                                    {movie.title}
-                                </h1>
-                                <Link
-                                    to={"movie/" + movie.id}
-                                    className='underline p-4'
-                                >
-                                    More
-                                </Link>
-                            </div>
-                        </article>
-                    </li>
-                );
-            })}
+                                    <h1
+                                        aria-label={movie.title}
+                                        aria-hidden='false'
+                                        tabIndex='0'
+                                        className='text-center text-xl p-4'
+                                    >
+                                        {movie.title}
+                                    </h1>
+                                    <Link
+                                        to={"movie/" + movie.id}
+                                        className='underline p-4'
+                                    >
+                                        More
+                                    </Link>
+                                </div>
+                            </article>
+                        </li>
+                    );
+                })}
         </ul>
     );
 }

@@ -58,16 +58,22 @@ export default function Movie() {
                 </tbody>
             </table>
 
-            <section className='grid md:grid-rows-[300px,400px] md:grid-cols-1 grid-cols-[1fr,3fr] gap-4'>
-                <figure>
+            <section className='flex flex-wrap sm:justify-center'>
+                <figure className='min-w-[200px] basis-1/3'>
                     <img src={imagesBaseUrl + movie.image} alt={movie.title} />
                 </figure>
-                <section tabIndex='0' title={movie.title + " youtube trailer"}>
-                    <iframe
-                        className='w-full h-full'
-                        src={movie.trailer.replace("watch?v=", "embed/")}
-                    ></iframe>
-                </section>
+                {movie.trailer ? (
+                    <section
+                        className='basis-2/3 aspect-video flex-grow'
+                        tabIndex='0'
+                        title={movie.title + " youtube trailer"}
+                    >
+                        <iframe
+                            className='w-full h-full '
+                            src={movie.trailer.replace("watch?v=", "embed/")}
+                        ></iframe>
+                    </section>
+                ) : null}
             </section>
 
             <table>

@@ -66,6 +66,7 @@ export default function Home() {
 
                     <MovieList
                         movies={movies}
+                        searchValue={searchValue}
                         filter={filter}
                         amountToShow={
                             filter === undefined && comments ? 8 : undefined
@@ -79,8 +80,30 @@ export default function Home() {
                         Most Commented
                     </h1>
 
+                    {searchValue ? (
+                        <div className='flex items-center'>
+                            <h2
+                                tabIndex='0'
+                                className='my-4 flex gap-4 text-base'
+                            >
+                                {"Based on search: " + searchValue}
+                            </h2>
+
+                            <button
+                                tabIndex='0'
+                                className='mx-4 px-4 py-0'
+                                onClick={() => {
+                                    setSearchValue("");
+                                }}
+                            >
+                                Clear search
+                            </button>
+                        </div>
+                    ) : null}
+
                     <MovieList
                         movies={movies}
+                        searchValue={searchValue}
                         filter='Most Commented'
                         amountToShow={8}
                     />

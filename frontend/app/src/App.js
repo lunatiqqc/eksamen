@@ -284,6 +284,7 @@ function App() {
                             >
                                 <input
                                     type='search'
+                                    className=''
                                     autoFocus
                                     value={searchValue}
                                     onChange={handleSearchChange}
@@ -369,7 +370,7 @@ function App() {
                             title='Coming Soon'
                             emptyArrayMessage='No upcoming movies'
                             itemBaseLink='/movie'
-                            itemsBaseLink='/'
+                            itemsBaseLink='/upcoming-movies'
                             linkState={{ prevPath: location.pathname }}
                         />
                     ) : null}

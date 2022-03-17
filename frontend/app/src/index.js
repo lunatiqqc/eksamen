@@ -12,6 +12,7 @@ import swagger from "./lib/swagger.json";
 import { imagesBaseUrl } from "./lib/fetcher";
 import SearchResults from "./components/pages/SearchResults";
 import { MyProvider } from "./components/Context";
+import ComingSoon from "./components/pages/ComingSoon";
 
 ReactDOM.render(
     <React.StrictMode>
@@ -20,6 +21,10 @@ ReactDOM.render(
                 <Routes>
                     <Route path='/' element={<App />}>
                         <Route index element={<Home />}></Route>
+                        <Route
+                            path='upcoming-movies'
+                            element={<ComingSoon />}
+                        ></Route>
                         <Route path='movie/:id' element={<Movie />}></Route>
                         <Route path='news' element={<News />}></Route>
                         <Route

@@ -1,6 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { get } from "../../lib/fetcher";
 import { context } from "../Context";
 
 export default function News() {
@@ -22,7 +21,7 @@ export default function News() {
                 ref={(el) => {
                     firstFocusElement.current = el;
                 }}
-                className='text-xl font-bold my-8'
+                className='text-2xl font-bold my-8'
             >
                 News
             </h1>

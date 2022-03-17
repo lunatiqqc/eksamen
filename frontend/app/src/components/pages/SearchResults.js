@@ -40,9 +40,9 @@ export default function SearchResults() {
                         .filter((movie) => filterMovies(movie, searchValue))
                         .map((movie) => {
                             return (
-                                <li className='flex flex-wrap gap-4 animate-fadeinslow max-w-prose'>
+                                <li className='flex flex-wrap gap-4 animate-fadeinslow max-w-[30ch]'>
                                     <article>
-                                        <figure className=''>
+                                        <figure className='w-[160px] h-[240px]'>
                                             <img
                                                 src={
                                                     imagesBaseUrl +
@@ -50,7 +50,7 @@ export default function SearchResults() {
                                                     movie.image
                                                 }
                                                 alt={movie.title}
-                                                className='w-48'
+                                                className='object-cover'
                                             />
                                         </figure>
                                         <div className=''>
