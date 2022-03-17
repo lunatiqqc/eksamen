@@ -22,10 +22,13 @@ export default function Movie() {
             console.log(movieDetails);
             setMovie(movieDetails);
 
-            firstFocusElement.current?.focus();
             return () => {};
         }
     }, [movies]);
+
+    useEffect(() => {
+        firstFocusElement.current?.focus();
+    }, [movie]);
 
     if (movie === undefined || movies === undefined) {
         return null;
@@ -40,17 +43,17 @@ export default function Movie() {
             >
                 {movie.title}
             </h1>
-            <table>
+            <table className=''>
                 <tbody>
                     <tr>
-                        <th>Age Rating: </th>
-                        <td>{movie.rating}</td>
-                        <th>Duration: </th>
-                        <td>{movie.duration}</td>
-                        <th>Genres: </th>
-                        <td>{movie.genres}</td>
-                        <th>Release Data: </th>
-                        <td>{movie.releaseDate}</td>
+                        <th tabIndex='0'>Age Rating: </th>
+                        <td tabIndex='0'>{movie.rating}</td>
+                        <th tabIndex='0'>Duration: </th>
+                        <td tabIndex='0'>{movie.duration}</td>
+                        <th tabIndex='0'>Genres: </th>
+                        <td tabIndex='0'>{movie.genres}</td>
+                        <th tabIndex='0'>Release Date: </th>
+                        <td tabIndex='0'>{movie.releaseDate}</td>
                     </tr>
                 </tbody>
             </table>
@@ -59,31 +62,35 @@ export default function Movie() {
                 <figure>
                     <img src={imagesBaseUrl + movie.image} alt={movie.title} />
                 </figure>
-                <iframe
-                    className='w-full h-full'
-                    src={movie.trailer.replace("watch?v=", "embed/")}
-                ></iframe>
+                <section tabIndex='0' title={movie.title + " youtube trailer"}>
+                    <iframe
+                        className='w-full h-full'
+                        src={movie.trailer.replace("watch?v=", "embed/")}
+                    ></iframe>
+                </section>
             </section>
 
             <table>
                 <tbody>
                     <tr>
-                        <th>DIRECTOR: </th>
-                        <td>{movie.director}</td>
+                        <th tabIndex='0'>DIRECTOR: </th>
+                        <td tabIndex='0'>{movie.director}</td>
                     </tr>
                     <tr>
-                        <th>WRITERS: </th>
-                        <td>{movie.writers}</td>
+                        <th tabIndex='0'>WRITERS: </th>
+                        <td tabIndex='0'>{movie.writers}</td>
                     </tr>
                     <tr>
-                        <th>STARS: </th>
-                        <td>{movie.stars}</td>
+                        <th tabIndex='0'>STARS: </th>
+                        <td tabIndex='0'>{movie.stars}</td>
                     </tr>
                 </tbody>
             </table>
             <section>
-                <h2>Description</h2>
-                <p className='max-w-prose'>{movie.description}</p>
+                <h2 tabIndex='0'>Description</h2>
+                <p tabIndex='0' className='max-w-prose'>
+                    {movie.description}
+                </p>
             </section>
 
             <section>

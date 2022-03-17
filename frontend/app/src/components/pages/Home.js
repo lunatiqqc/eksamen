@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { context } from "../Context";
 import MovieList from "../MovieList";
@@ -18,6 +18,13 @@ export default function Home() {
         return () => {};
     }, []);
 
+    const firstFocusElement = useRef();
+
+    useEffect(() => {
+        firstFocusElement.current?.focus();
+        return () => {};
+    }, [filter]);
+
     const filterToHeadingMapper = {
         "Show All": "All Movies",
         "Latest Movies": "Latest Movies",
@@ -28,23 +35,34 @@ export default function Home() {
         <>
             {movies ? (
                 <article className='my-12'>
-                    <h1 className='text-2xl font-bold my-4' tabIndex='0'>
+                    <h1
+                        ref={firstFocusElement}
+                        className='text-2xl font-bold my-4'
+                        tabIndex='0'
+                    >
                         {filterToHeadingMapper[filter] || "Movies"}
-                        <br />
-                        {searchValue ? (
-                            <span className='my-4 flex gap-4 text-base'>
-                                {"Based on search: " + searchValue}
-                                <button
-                                    className='mx-4 px-4 py-0'
-                                    onClick={() => {
-                                        setSearchValue("");
-                                    }}
-                                >
-                                    Clear search
-                                </button>
-                            </span>
-                        ) : null}
                     </h1>
+
+                    {searchValue ? (
+                        <div className='flex items-center'>
+                            <h2
+                                tabIndex='0'
+                                className='my-4 flex gap-4 text-base'
+                            >
+                                {"Based on search: " + searchValue}
+                            </h2>
+
+                            <button
+                                tabIndex='0'
+                                className='mx-4 px-4 py-0'
+                                onClick={() => {
+                                    setSearchValue("");
+                                }}
+                            >
+                                Clear search
+                            </button>
+                        </div>
+                    ) : null}
 
                     <MovieList
                         movies={movies}
@@ -57,7 +75,9 @@ export default function Home() {
             ) : null}
             {filter === undefined && movies && comments ? (
                 <article className='my-12'>
-                    <h1 className='text-2xl font-bold my-4'>Most Commented</h1>
+                    <h1 tabIndex='0' className='text-2xl font-bold my-4'>
+                        Most Commented
+                    </h1>
 
                     <MovieList
                         movies={movies}

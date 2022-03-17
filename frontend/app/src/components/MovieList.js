@@ -48,7 +48,6 @@ export default function MovieList({ movies, amountToShow, filter }) {
                 const hovering = movieHovered === movie.id;
                 return (
                     <li
-                        tabIndex='0'
                         className='w-[160px]'
                         key={i}
                         onMouseOver={() => {
@@ -66,13 +65,18 @@ export default function MovieList({ movies, amountToShow, filter }) {
                                     alt={movie.title}
                                 />
                             </figure>
-                            <section
+                            <div
                                 className={
-                                    "flex flex-col items-center justify-around animate-fadein sm:static sm:visible absolute z-10 inset-0 bg-neutral-700 bg-opacity-90 h-full w-full" +
-                                    (hovering ? "visible" : " invisible")
+                                    " flex flex-col items-center justify-around animate-fadein sm:static sm:visible absolute z-10 inset-0 bg-neutral-700 bg-opacity-90 h-full w-full" +
+                                    (hovering ? " " : " sr-only")
                                 }
                             >
-                                <h1 className='text-center text-xl p-4'>
+                                <h1
+                                    aria-label={movie.title}
+                                    aria-hidden='false'
+                                    tabIndex='0'
+                                    className='text-center text-xl p-4'
+                                >
                                     {movie.title}
                                 </h1>
                                 <Link
@@ -81,7 +85,7 @@ export default function MovieList({ movies, amountToShow, filter }) {
                                 >
                                     More
                                 </Link>
-                            </section>
+                            </div>
                         </article>
                     </li>
                 );

@@ -30,12 +30,14 @@ function App() {
     const [showLoginButton, setShowLoginButton] = useState(true);
     const [showSearchButton, setShowSearchButton] = useState(true);
 
+    const mobileMenuRef = useRef();
+
     const mounted = useRef();
 
     function handleWindowResize() {
         if (window.innerWidth > 767) {
-            setShowLogin(false);
             setShowSearch(false);
+            setShowLogin(false);
         }
     }
 
@@ -66,15 +68,23 @@ function App() {
         window.scrollTo({ top: 0, left: 0 });
 
         setShowMobileMenu(false);
+        setShowLogin(false);
+        setShowSearch(false);
     }, [location.pathname]);
 
     useEffect(() => {
         if (mounted.current) {
             setFilter(location.state?.filter);
         }
-
-        mounted.current = true;
     }, [location.state]);
+
+    useEffect(() => {
+        if (showMobileMenu) {
+            mobileMenuRef.current?.focus();
+        }
+        mounted.current = true;
+        return () => {};
+    }, [showMobileMenu]);
 
     const links = [
         { text: "Home", link: "/" },
@@ -93,7 +103,7 @@ function App() {
     }
 
     return (
-        <div className='App md:px-2 px-16 bg-neutral-900 text-slate-50'>
+        <div className='App md:px-2 lg:px-16 2xl:px-32 px-60 bg-neutral-900 text-slate-50'>
             <header className='grid gap-4 md:sticky -top-8 bg-neutral-900 z-30'>
                 <nav className='grid md:gap-0 gap-4 md:relative'>
                     <ul className='flex justify-end gap-2'>
@@ -137,6 +147,7 @@ function App() {
                             <h1>MOVIE HUNTER</h1>
                         </Link>
                         <button
+                            title='Show menu'
                             onClick={() => {
                                 setShowMobileMenu((prev) => {
                                     setShowLogin(false);
@@ -158,6 +169,11 @@ function App() {
                                 return (
                                     <li className='text-center' key={i}>
                                         <Link
+                                            ref={
+                                                i === 0
+                                                    ? mobileMenuRef
+                                                    : undefined
+                                            }
                                             className='text-xl '
                                             to={item.link}
                                         >
@@ -225,11 +241,13 @@ function App() {
                                 type='email'
                                 placeholder='Email...'
                                 required
+                                aria-required
                             />
                             <input
                                 type='text'
                                 placeholder='Password...'
                                 required
+                                aria-required
                             />
                             <button className='px-4'>Login</button>
                             <button className='bg-transparent text-white'>
@@ -238,10 +256,11 @@ function App() {
                         </form>
                         {showLogin ? (
                             <form
-                                className='absolute w-fit right-0 top-full z-20 flex gap-4 flex-wrap gap-4 h-fit bg-neutral-800  p-4'
+                                className='absolute w-fit right-0 top-full z-20 flex flex-wrap gap-4 h-fit bg-neutral-800  p-4'
                                 action=''
                             >
                                 <input
+                                    autoFocus
                                     type='email'
                                     placeholder='Email...'
                                     required
@@ -265,6 +284,7 @@ function App() {
                             >
                                 <input
                                     type='search'
+                                    autoFocus
                                     value={searchValue}
                                     onChange={handleSearchChange}
                                 />
@@ -273,6 +293,7 @@ function App() {
                         ) : null}
 
                         <button
+                            title='Search'
                             onClick={() => {
                                 setShowSearch((prev) => {
                                     if (prev === false) {
@@ -292,6 +313,10 @@ function App() {
                         </button>
 
                         <button
+                            title={
+                                (showLogin ? "Remove" : "Render") +
+                                " Login form"
+                            }
                             onClick={() => {
                                 setShowLogin((prev) => {
                                     if (prev === false) {

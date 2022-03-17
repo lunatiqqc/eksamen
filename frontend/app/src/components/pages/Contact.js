@@ -7,6 +7,8 @@ export default function Contact() {
 
     const [formResponseMessage, setFormResponseMessage] = useState();
 
+    const responseEL = useRef();
+
     const firstFocusElement = useRef();
     useEffect(() => {
         get("Contacts").then((json) => setContacts(json));
@@ -40,6 +42,12 @@ export default function Contact() {
             setFormResponseMessage("An unexpected error occurred");
         }
     }
+
+    useEffect(() => {
+        responseEL.current?.focus();
+
+        return () => {};
+    }, [formResponseMessage]);
 
     return (
         <article className='my-12'>
@@ -76,6 +84,7 @@ export default function Contact() {
                         className='w-full'
                         value={form.name || ""}
                         required
+                        aria-required
                     />
                     <input
                         onChange={handleChange}
@@ -86,6 +95,7 @@ export default function Contact() {
                         className='w-full'
                         value={form.email || ""}
                         required
+                        aria-required
                     />
                     <textarea
                         onChange={handleChange}
@@ -94,12 +104,15 @@ export default function Contact() {
                         placeholder='Your Message...'
                         className='w-full'
                         required
+                        aria-required
                         value={form.message || ""}
                     ></textarea>
 
                     <button className='w-fit px-4 py-2'>Send</button>
                     {formResponseMessage ? (
-                        <div>{formResponseMessage}</div>
+                        <div tabIndex='0' ref={responseEL}>
+                            {formResponseMessage}
+                        </div>
                     ) : null}
                 </form>
             </article>
