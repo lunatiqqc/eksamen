@@ -25,7 +25,12 @@ export default function Dashboard({
 
     const endpointsFiltered = endpoints
         .map((endpoint) => endpoint.replace("/api/", "").replace())
-        .filter((endpoint) => !endpoint.includes("{"));
+        .filter(
+            (endpoint) =>
+                !endpoint.includes("{") &&
+                !endpoint.includes("/") &&
+                !endpoint.includes("Login")
+        );
 
     useEffect(() => {
         for (let i = 0; i < endpointsFiltered.length; i++) {
@@ -232,8 +237,6 @@ export default function Dashboard({
         if (obj instanceof Error) {
             return;
         }
-
-        console.log(obj);
 
         if (ImagePreviewSrc) {
             const image = await imageToBase64(ImagePreviewSrc);
@@ -488,15 +491,21 @@ export default function Dashboard({
                             <div className='flex gap-4'>
                                 <h1 className='text-2xl'>{endpoint}</h1>
 
-                                <button
-                                    className='flex items-center'
-                                    onClick={() => {
-                                        handleAdd(endpoint, keys, properties);
-                                    }}
-                                >
-                                    Tilføj ny
-                                    <IoAddCircle size='36' />
-                                </button>
+                                {endpoint !== "Comments" ? (
+                                    <button
+                                        className='flex items-center'
+                                        onClick={() => {
+                                            handleAdd(
+                                                endpoint,
+                                                keys,
+                                                properties
+                                            );
+                                        }}
+                                    >
+                                        Tilføj ny
+                                        <IoAddCircle size='36' />
+                                    </button>
+                                ) : null}
                             </div>
                             <table className='text-xs'>
                                 <thead>
@@ -548,9 +557,6 @@ export default function Dashboard({
                                                             function determineImageSrc(
                                                                 value
                                                             ) {
-                                                                console.log(
-                                                                    value
-                                                                );
                                                                 if (
                                                                     value?.includes(
                                                                         "blob:"
@@ -564,7 +570,12 @@ export default function Dashboard({
                                                                     (addingAtEndpoint &&
                                                                         isLastItem)
                                                                 ) {
-                                                                    return ImagePreviewSrc;
+                                                                    return (
+                                                                        ImagePreviewSrc ||
+                                                                        imageBaseUrl +
+                                                                            "/" +
+                                                                            value
+                                                                    );
                                                                 }
                                                                 return (
                                                                     imageBaseUrl +

@@ -22,6 +22,7 @@ namespace CoreMovieHunterAPI.Models
         public virtual DbSet<Message> Messages { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
+
         {
             modelBuilder.Entity<Contact>(entity =>
             {

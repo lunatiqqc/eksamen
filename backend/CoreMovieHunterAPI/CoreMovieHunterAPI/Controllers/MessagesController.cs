@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CoreMovieHunterAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoreMovieHunterAPI.Controllers
 {
@@ -76,6 +77,7 @@ namespace CoreMovieHunterAPI.Controllers
         // POST: api/Messages
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+
         public async Task<ActionResult<Message>> PostMessage(Message message)
         {
             _context.Messages.Add(message);

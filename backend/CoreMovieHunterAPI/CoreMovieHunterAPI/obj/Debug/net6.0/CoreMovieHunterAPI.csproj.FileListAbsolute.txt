@@ -596,3 +596,4 @@ C:\Users\Lunatiqqc\Desktop\skolearbejde\eksamen\backend\CoreMovieHunterAPI\CoreM
 C:\Users\Lunatiqqc\Desktop\skolearbejde\eksamen\backend\CoreMovieHunterAPI\CoreMovieHunterAPI\obj\Debug\net6.0\ref\CoreMovieHunterAPI.dll
 C:\Users\Lunatiqqc\Desktop\skolearbejde\eksamen\backend\CoreMovieHunterAPI\CoreMovieHunterAPI\obj\Debug\net6.0\CoreMovieHunterAPI.pdb
 C:\Users\Lunatiqqc\Desktop\skolearbejde\eksamen\backend\CoreMovieHunterAPI\CoreMovieHunterAPI\obj\Debug\net6.0\CoreMovieHunterAPI.genruntimeconfig.cache
+C:\Users\Lunatiqqc\Desktop\skolearbejde\eksamen\backend\CoreMovieHunterAPI\CoreMovieHunterAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

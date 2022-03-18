@@ -1,17 +1,17 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { get, imagesBaseUrl } from "../../lib/fetcher";
+import { imagesBaseUrl, post } from "../../lib/fetcher";
 import { context } from "../Context";
 
 export default function Movie() {
-    const { movies } = useContext(context);
+    const { movies, comments, setComments, token, user } = useContext(context);
     const { id } = useParams();
+
+    const [form, setForm] = useState();
 
     const [movie, setMovie] = useState();
 
     const firstFocusElement = useRef();
-
-    console.log(id);
 
     useEffect(() => {
         if (movies) {
@@ -19,7 +19,6 @@ export default function Movie() {
                 return movie.id === parseInt(id);
             });
 
-            console.log(movieDetails);
             setMovie(movieDetails);
 
             return () => {};
@@ -30,19 +29,54 @@ export default function Movie() {
         firstFocusElement.current?.focus();
     }, [movie]);
 
+    function handleChange(e) {
+        setForm((prev) => {
+            return { ...prev, [e.target.name]: e.target.value };
+        });
+    }
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        const copy = { ...form };
+
+        copy.alias = user.alias || "";
+
+        copy.movieId = movie.id;
+
+        const comment = await post("Comments", JSON.stringify(copy), token);
+
+        if (comment) {
+            setComments((prev) => {
+                return [...prev, comment];
+            });
+            setForm();
+        }
+    }
+
     if (movie === undefined || movies === undefined) {
         return null;
     }
 
     return (
-        <article className='grid gap-8 my-16'>
-            <h1
-                tabIndex='0'
-                ref={firstFocusElement}
-                className='font-bold text-2xl'
-            >
-                {movie.title}
-            </h1>
+        <article className='grid gap-8 mt-8 mb-8'>
+            <div className='flex justify-between'>
+                <h1
+                    tabIndex='0'
+                    ref={firstFocusElement}
+                    className='font-bold text-2xl'
+                >
+                    {movie.title}
+                </h1>
+                <span>
+                    Comments:{" "}
+                    {
+                        comments?.filter((comment) => {
+                            return comment.movieId === movie.id;
+                        }).length
+                    }
+                </span>
+            </div>
             <table className=''>
                 <tbody>
                     <tr>
@@ -100,8 +134,57 @@ export default function Movie() {
             </section>
 
             <section>
-                <h3>Comments</h3>
-                <p>comments</p>
+                <form
+                    className='flex flex-col gap-2 my-8'
+                    onChange={handleChange}
+                    onSubmit={handleSubmit}
+                    action=''
+                >
+                    <textarea
+                        disabled={user === undefined}
+                        className='max-w-prose'
+                        placeholder={
+                            user === undefined
+                                ? "Membership required to comment"
+                                : "write here..."
+                        }
+                        name='message'
+                        id=''
+                        cols='30'
+                        rows='5'
+                        value={form?.message || ""}
+                    ></textarea>
+
+                    {user ? (
+                        <button className='p-2 w-fit text-lg'>Post</button>
+                    ) : null}
+                </form>
+
+                {comments ? (
+                    <ul className='flex gap-4 flex-col-reverse'>
+                        {comments
+                            .filter((comment) => {
+                                return comment.movieId === movie.id;
+                            })
+                            .map((comment, i) => {
+                                return (
+                                    <li key={i}>
+                                        <article>
+                                            <h1>
+                                                {comment.alias || "Anonymous"} -{" "}
+                                                <span className='text-orange-500'>
+                                                    {new Date(
+                                                        comment.date
+                                                    ).toLocaleDateString()}
+                                                </span>
+                                            </h1>
+                                            <p>{comment.message}</p>
+                                        </article>
+                                    </li>
+                                );
+                            })}
+                    </ul>
+                ) : null}
             </section>
         </article>
     );

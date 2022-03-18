@@ -8,10 +8,6 @@ export default function Home() {
 
     const { movies, comments } = useContext(context);
 
-    console.log(movies);
-
-    const [mostCommentedMovies, setMostCommentedMovies] = useState([]);
-
     useEffect(() => {
         document.title = "Movie hunter";
 
@@ -69,12 +65,14 @@ export default function Home() {
                         searchValue={searchValue}
                         filter={filter}
                         amountToShow={
-                            filter === undefined && comments ? 8 : undefined
+                            filter === undefined && comments?.length > 0
+                                ? 8
+                                : undefined
                         }
                     />
                 </article>
             ) : null}
-            {filter === undefined && movies && comments ? (
+            {filter === undefined && movies && comments?.length > 0 ? (
                 <article className='my-12'>
                     <h1 tabIndex='0' className='text-2xl font-bold my-4'>
                         Most Commented

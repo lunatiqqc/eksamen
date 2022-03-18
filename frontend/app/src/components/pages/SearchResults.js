@@ -1,6 +1,6 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Link, useLocation, useOutletContext } from "react-router-dom";
-import { get, imagesBaseUrl } from "../../lib/fetcher";
+import { useContext, useEffect, useRef } from "react";
+import { Link, useOutletContext } from "react-router-dom";
+import { imagesBaseUrl } from "../../lib/fetcher";
 import filterMovies from "../../lib/filterMovies";
 import { context } from "../Context";
 import EmptyArrayChecker from "../EmptyArrayChecker";
@@ -8,7 +8,6 @@ import EmptyArrayChecker from "../EmptyArrayChecker";
 export default function SearchResults() {
     const { searchValue } = useOutletContext();
     const { movies } = useContext(context);
-    const [movieHovered, setMovieHovered] = useState();
 
     const firstFocusElement = useRef();
 
@@ -21,10 +20,6 @@ export default function SearchResults() {
         firstFocusElement.current?.focus();
     }, [movies]);
 
-    function List() {
-        return;
-    }
-
     return searchValue && movies ? (
         <article className='my-12'>
             <h1
@@ -32,15 +27,18 @@ export default function SearchResults() {
                 ref={firstFocusElement}
                 className='text-xl font-bold my-8'
             >
-                Search results
+                Search results <span>for: {searchValue}</span>
             </h1>
             <ul className='flex flex-wrap gap-8'>
                 <EmptyArrayChecker message='No results'>
                     {movies
                         .filter((movie) => filterMovies(movie, searchValue))
-                        .map((movie) => {
+                        .map((movie, i) => {
                             return (
-                                <li className='flex flex-wrap gap-4 animate-fadeinslow max-w-[30ch]'>
+                                <li
+                                    key={i}
+                                    className='flex flex-wrap gap-4 animate-fadeinslow max-w-[30ch]'
+                                >
                                     <article>
                                         <figure className='w-[160px] h-[240px]'>
                                             <img

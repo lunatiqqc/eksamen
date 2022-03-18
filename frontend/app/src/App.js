@@ -12,9 +12,10 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { context } from "./components/Context";
 import ListArticle from "./components/ListArticle";
 import "./index.css";
+import { login } from "./lib/fetcher";
 
 function App() {
-    const { movies, news } = useContext(context);
+    const { movies, news, setToken, setUser, user } = useContext(context);
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -29,6 +30,8 @@ function App() {
 
     const [showLoginButton, setShowLoginButton] = useState(true);
     const [showSearchButton, setShowSearchButton] = useState(true);
+
+    const [form, setForm] = useState();
 
     const mobileMenuRef = useRef();
 
@@ -70,7 +73,7 @@ function App() {
         setShowMobileMenu(false);
         setShowLogin(false);
         setShowSearch(false);
-    }, [location.pathname]);
+    }, [location]);
 
     useEffect(() => {
         if (mounted.current) {
@@ -82,14 +85,23 @@ function App() {
         if (showMobileMenu) {
             mobileMenuRef.current?.focus();
         }
-        mounted.current = true;
+
         return () => {};
     }, [showMobileMenu]);
+
+    useEffect(() => {
+        if (user) {
+            setShowLogin(false);
+        }
+
+        mounted.current = true;
+    }, [user]);
 
     const links = [
         { text: "Home", link: "/" },
         { text: "News", link: "/news" },
         { text: "Contact", link: "/contact" },
+        { text: "Account", link: "/member" },
     ];
 
     function handleSearchChange(e) {
@@ -102,9 +114,24 @@ function App() {
         navigate("/search", { state: searchValue });
     }
 
+    function handleChange(e) {
+        setForm((prev) => {
+            return { ...prev, [e.target.name]: e.target.value };
+        });
+    }
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        const token = await login("login", JSON.stringify(form));
+
+        setToken(token);
+
+        console.log(token);
+    }
+
     return (
         <div className='App md:px-2 lg:px-16 2xl:px-32 px-60 bg-neutral-900 text-slate-50'>
-            <header className='grid gap-4 md:sticky -top-8 bg-neutral-900 z-30'>
+            <header className='grid gap-4 md:sticky -top-8 bg-neutral-900 z-30 pb-4'>
                 <nav className='grid md:gap-0 gap-4 md:relative'>
                     <ul className='flex justify-end gap-2'>
                         {[
@@ -167,7 +194,7 @@ function App() {
                         >
                             {links.map((item, i) => {
                                 return (
-                                    <li className='text-center' key={i}>
+                                    <li className='text-center my-4' key={i}>
                                         <Link
                                             ref={
                                                 i === 0
@@ -233,47 +260,87 @@ function App() {
                     </section>
 
                     <section className='md:w-full w-fit ml-auto flex justify-end gap-4 md:absolute md:top-full'>
-                        <form
-                            className='flex flex-wrap gap-4 md:hidden'
-                            action=''
-                        >
-                            <input
-                                type='email'
-                                placeholder='Email...'
-                                required
-                                aria-required
-                            />
-                            <input
-                                type='text'
-                                placeholder='Password...'
-                                required
-                                aria-required
-                            />
-                            <button className='px-4'>Login</button>
-                            <button className='bg-transparent text-white'>
-                                Not a member?
-                            </button>
-                        </form>
+                        {user === undefined ? (
+                            <form
+                                onChange={handleChange}
+                                onSubmit={handleSubmit}
+                                className='flex flex-wrap gap-4 md:hidden'
+                                action=''
+                            >
+                                <input
+                                    type='text'
+                                    placeholder='Username...'
+                                    required
+                                    name='username'
+                                    aria-required
+                                />
+                                <input
+                                    type='text'
+                                    placeholder='Password...'
+                                    name='password'
+                                    required
+                                    aria-required
+                                />
+                                <button className='px-4'>Login</button>
+
+                                <Link to='/member'>Not a member?</Link>
+                            </form>
+                        ) : (
+                            <article
+                                className={
+                                    (showSearchButton || window.innerWidth > 767
+                                        ? "animate-fadefromtop "
+                                        : "animate-fadetotop ") +
+                                    "flex gap-2 items-center relative bg-neutral-800 rounded-md "
+                                }
+                            >
+                                <h1 className=''>
+                                    Hello{" "}
+                                    <span>{user.alias || "Anonymous"}</span>{" "}
+                                </h1>
+                                <Link to='/member'>
+                                    <AiOutlineUser size='36' />
+                                </Link>
+                                <button
+                                    onClick={() => {
+                                        const cookieEnabled =
+                                            window.navigator.cookieEnabled;
+
+                                        if (cookieEnabled) {
+                                            window.localStorage.removeItem(
+                                                "token"
+                                            );
+                                        }
+
+                                        setUser();
+                                    }}
+                                >
+                                    logout
+                                </button>
+                            </article>
+                        )}
                         {showLogin ? (
                             <form
+                                onChange={handleChange}
+                                onSubmit={handleSubmit}
                                 className='absolute w-fit right-0 top-full z-20 flex flex-wrap gap-4 h-fit bg-neutral-800  p-4'
                                 action=''
                             >
                                 <input
                                     autoFocus
-                                    type='email'
-                                    placeholder='Email...'
+                                    type='text'
+                                    placeholder='Username...'
                                     required
+                                    name='username'
                                 />
                                 <input
                                     type='text'
                                     placeholder='Password...'
+                                    name='password'
                                     required
                                 />
                                 <button className='px-4'>Login</button>
-                                <button className='bg-transparent text-white'>
-                                    Not a member?
-                                </button>
+                                <Link to='/member'>Not a member?</Link>
                             </form>
                         ) : null}
                         {showSearch ? (
@@ -313,29 +380,32 @@ function App() {
                             <AiOutlineSearch size={36} />
                         </button>
 
-                        <button
-                            title={
-                                (showLogin ? "Remove" : "Render") +
-                                " Login form"
-                            }
-                            onClick={() => {
-                                setShowLogin((prev) => {
-                                    if (prev === false) {
-                                        setShowSearch(false);
+                        {user === undefined ? (
+                            <div>
+                                <button
+                                    title={
+                                        (showLogin ? "Remove" : "Render") +
+                                        " Login form"
                                     }
-
-                                    return !prev;
-                                });
-                            }}
-                            className={
-                                "hidden md:block relative" +
-                                (showLoginButton
-                                    ? " animate-fadefromtop"
-                                    : " animate-fadetotop")
-                            }
-                        >
-                            <AiOutlineUser size='36' />
-                        </button>
+                                    onClick={() => {
+                                        setShowLogin((prev) => {
+                                            if (prev === false) {
+                                                setShowSearch(false);
+                                            }
+                                            return !prev;
+                                        });
+                                    }}
+                                    className={
+                                        "hidden md:block relative" +
+                                        (showLoginButton
+                                            ? " animate-fadefromtop"
+                                            : " animate-fadetotop")
+                                    }
+                                >
+                                    <AiOutlineUser size='36' />
+                                </button>
+                            </div>
+                        ) : null}
                     </section>
                 </nav>
             </header>
@@ -386,7 +456,7 @@ function App() {
                     })}
                 </ul>
 
-                <section tabIndex='0' className='text-center my-4'>
+                <section tabIndex='0' className='text-center mt-4'>
                     &copy;Movie Hunter ApS
                 </section>
             </footer>

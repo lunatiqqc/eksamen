@@ -15,7 +15,6 @@ export default function Contact() {
 
         document.title = "Contact";
 
-        console.log(firstFocusElement);
         firstFocusElement.current.focus();
         return () => {};
     }, []);

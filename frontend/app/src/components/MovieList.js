@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { imagesBaseUrl } from "../lib/fetcher";
 import filterMovies from "../lib/filterMovies";
@@ -10,7 +10,6 @@ export default function MovieList({
     filter,
     searchValue,
 }) {
-    console.log(filter);
     const { comments } = useContext(context);
 
     const [movieHovered, setMovieHovered] = useState();
@@ -35,6 +34,22 @@ export default function MovieList({
         if (filter === "Show All") {
             setFilteredMovies((prev) => {
                 return movies;
+            });
+        }
+
+        if (filter === "Most Commented") {
+            setFilteredMovies((prev) => {
+                const copy = [...movies];
+                return copy.sort((a, b) => {
+                    a = comments.filter((comment) => {
+                        return comment.movieId === a.id;
+                    }).length;
+                    b = comments.filter((comment) => {
+                        return comment.movieId === b.id;
+                    }).length;
+
+                    return b - a;
+                });
             });
         }
 

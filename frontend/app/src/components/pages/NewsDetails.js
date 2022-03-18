@@ -1,6 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { get } from "../../lib/fetcher";
 import { context } from "../Context";
 
 export default function NewsDetails() {
